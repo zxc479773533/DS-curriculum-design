@@ -3,6 +3,9 @@
  * Developed by Pan Yue
  * zxc479773533@gmail.com
  */
+#ifndef PY_AVL_LIB
+#define PY_AVL_LIB
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,3 +60,5 @@ AVL_node* insert_avl(AVL_node *tree, int key);
 AVL_node* delete_avl(AVL_node *tree, AVL_node *node);
 AVL_node* clear_avl(AVL_node *tree);
 void traverse_avl(AVL_node *tree, int option, void (*visit)(int));
+
+#endif // !PY_AVL_LIB
