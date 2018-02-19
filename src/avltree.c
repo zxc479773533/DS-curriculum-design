@@ -145,7 +145,7 @@ AVL_node* rightleft_rotate(AVL_node *k1) {
  * 
  * return <- the root node after balanced
  */
-AVL_node* insert_avl(AVL_node *tree, int key) {
+AVL_node* insert_avl(AVL_node *tree, int key, int *safe_tag) {
   /* Create new node */
   if (tree == NULL) {
     tree = (AVL_node*)malloc(sizeof(AVL_node));
@@ -156,7 +156,7 @@ AVL_node* insert_avl(AVL_node *tree, int key) {
   }
   /* Insert in left child tree */
   else if (key < tree->key) {
-    tree->left_child = insert_avl(tree->left_child, key);
+    tree->left_child = insert_avl(tree->left_child, key, safe_tag);
     /* Balance it */
     if (avl_height(tree->left_child) - avl_height(tree->right_child) == 2) {
       /* Insert left-left */
@@ -169,7 +169,7 @@ AVL_node* insert_avl(AVL_node *tree, int key) {
   }
   /* Insert in right child tree */
   else if (key > tree->key) {
-    tree->right_child = insert_avl(tree->right_child, key);
+    tree->right_child = insert_avl(tree->right_child, key, safe_tag);
     /* Balance it */
     if (avl_height(tree->right_child) - avl_height(tree->left_child) == 2) {
       /* Insert right-left */
@@ -181,7 +181,10 @@ AVL_node* insert_avl(AVL_node *tree, int key) {
     }
   }
 
-  /* If the key exists, do nothing */
+  /* If the key exists, let the safe tag be zero */
+  else {
+    *safe_tag = 0;
+  }
 
   /* Count height */
   tree->height = 1 + Max(avl_height(tree->left_child), avl_height(tree->right_child));
@@ -328,6 +331,7 @@ AVL_tree* Init_AVL(int kind, int id) {
   new_avl->kind = kind;
   new_avl->id = id;
   new_avl->root = NULL;
+  new_avl->num = 0;
   return new_avl;
 }
 
@@ -341,6 +345,18 @@ AVL_tree* Init_AVL(int kind, int id) {
 void Destroy_AVL(AVL_tree *AVL) {
   AVL->root = clear_avl(AVL->root);
   free(AVL);
+}
+
+/*
+ * API name: Clear_AVL
+ * Usage: Clear an AVL tree
+ * Arguements:
+ *   -> AVL_tree *AVL: The AVL tree to be cleared
+ * Return: NULL
+ */
+void Clear_AVL(AVL_tree *AVL) {
+  AVL->root = clear_avl(AVL->root);
+  AVL->num = 0;
 }
 
 /*
@@ -370,7 +386,12 @@ int Search_AVL(AVL_tree *AVL, int key) {
  * Return: NULL
  */
 void Insert_AVL(AVL_tree *AVL, int key) {
-  AVL->root = insert_avl(AVL->root, key);
+  /* safe tag = 0 means insert error, default 1 */
+  int safe_tag = 1;
+  AVL->root = insert_avl(AVL->root, key, &safe_tag);
+  /* If insert ok, add num */
+  if (safe_tag == 1)
+    AVL->num++;
 }
 
 /*
@@ -383,8 +404,10 @@ void Insert_AVL(AVL_tree *AVL, int key) {
  */
 void Delete_AVL(AVL_tree *AVL, int key) {
   AVL_node *node = search_avl(AVL->root, key);
-  if (node != NULL)
+  if (node != NULL) {
     AVL->root = delete_avl(AVL->root, node);
+    AVL->num--;
+  }
 }
 
 /*

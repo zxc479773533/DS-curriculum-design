@@ -42,6 +42,7 @@ typedef struct AVL_tree {
 /* APIs */
 AVL_tree* Init_AVL(int kind, int id);
 void Destroy_AVL(AVL_tree *AVL);
+void Clear_AVL(AVL_tree *AVL);
 int Search_AVL(AVL_tree *AVL, int key);
 void Insert_AVL(AVL_tree *AVL, int key);
 void Delete_AVL(AVL_tree *AVL, int key);
@@ -56,7 +57,7 @@ AVL_node* leftleft_rotate(AVL_node *tree);
 AVL_node* rightright_rotate(AVL_node *tree);
 AVL_node* leftright_rotate(AVL_node *tree);
 AVL_node* rightleft_rotate(AVL_node *tree);
-AVL_node* insert_avl(AVL_node *tree, int key);
+AVL_node* insert_avl(AVL_node *tree, int key, int *safe_tag);
 AVL_node* delete_avl(AVL_node *tree, AVL_node *node);
 AVL_node* clear_avl(AVL_node *tree);
 void traverse_avl(AVL_node *tree, int option, void (*visit)(int));
