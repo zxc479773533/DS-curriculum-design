@@ -48,7 +48,7 @@ void Insert_AVL(AVL_tree *AVL, int key);
 void Delete_AVL(AVL_tree *AVL, int key);
 void Traverse_AVL(AVL_tree *AVL, int option, void (*visit)(int));
 
-/* Assist functions */
+/* Functions */
 int avl_height(AVL_node *tree);
 AVL_node* search_avl(AVL_node *tree, int key);
 AVL_node* find_min(AVL_node *tree);
