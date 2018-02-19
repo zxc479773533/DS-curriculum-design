@@ -1,5 +1,5 @@
 /*
- * AVL Tree basic library 
+ * AVL Tree library 
  * Developed by Pan Yue
  * zxc479773533@gmail.com
  */

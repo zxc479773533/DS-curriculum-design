@@ -1,9 +1,9 @@
 /*
- * AVL Tree basic implemention
+ * AVL Tree implemention
  * Developed by Pan Yue
  * zxc479773533@gmail.com
  */
-#include "avl_basic.h"
+#include "avltree.h"
 
 /*
  * avl_height -> get height of an avl tree
