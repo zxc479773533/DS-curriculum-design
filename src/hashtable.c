@@ -28,6 +28,7 @@ int insert_Hash(HashNode **Hash, int key, char *value, int hashlen) {
   HashNode *node = Hash[index]->next;
   while (node != NULL) {
     if (node->key == key) {
+      /* Here I set no-repeate hash table */
       if (node->count == 0) {
         node->count++;
         status = OK;
