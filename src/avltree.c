@@ -269,7 +269,7 @@ AVL_node* delete_avl(AVL_node *tree, AVL_node *node) {
 /*
  * clear_avl -> clear all nodes in AVL tree
  * 
- * return <- NULL
+ * return <- None
  */
 AVL_node* clear_avl(AVL_node *tree) {
   if (tree == NULL)
@@ -289,7 +289,7 @@ AVL_node* clear_avl(AVL_node *tree) {
 /*
  * traverse_avl -> traverse the AVL tree
  * 
- * return <- NULL
+ * return <- None
  */
 void traverse_avl(AVL_node *tree, int option, void (*visit)(int)) {
   if (option == PREORDER) {
@@ -306,6 +306,31 @@ void traverse_avl(AVL_node *tree, int option, void (*visit)(int)) {
     traverse_avl(tree->left_child, option, visit);
     traverse_avl(tree->right_child, option, visit);
     (*visit)(tree->key);
+  }
+}
+
+/*
+ * save_avl -> save the AVL tree to a file
+ * 
+ * return <- None
+ */
+void save_avl(AVL_node *tree, FILE *fp) {
+  save_avl(tree->left_child, fp);
+  fprintf(fp, "%d\n", tree->key);
+  save_avl(tree->right_child, fp);
+}
+
+/*
+ * save_avl -> save the AVL tree to a file
+ * 
+ * return <- None
+ */
+void load_avl(AVL_node *tree, FILE *fp) {
+  int key;
+  /* This safe tag is of no use */
+  int safe_tag = 1;
+  while (fscanf(fp, "%d\n", &key) != 0) {
+    insert_avl(tree, key, &safe_tag);
   }
 }
 
@@ -340,7 +365,7 @@ AVL_tree* Init_AVL(int kind, int id) {
  * Usage: Clear and destroy an AVL tree
  * Arguements:
  *   -> AVL_tree *AVL: The AVL tree to be deleted
- * Return: NULL
+ * Return: None
  */
 void Destroy_AVL(AVL_tree *AVL) {
   AVL->root = clear_avl(AVL->root);
@@ -352,7 +377,7 @@ void Destroy_AVL(AVL_tree *AVL) {
  * Usage: Clear an AVL tree
  * Arguements:
  *   -> AVL_tree *AVL: The AVL tree to be cleared
- * Return: NULL
+ * Return: None
  */
 void Clear_AVL(AVL_tree *AVL) {
   AVL->root = clear_avl(AVL->root);
@@ -383,7 +408,7 @@ int Search_AVL(AVL_tree *AVL, int key) {
  * Arguements:
  *   -> AVL_tree *AVL: The AVL tree to be inserted
  *   -> int key: The key of the node to be inserted
- * Return: NULL
+ * Return: None
  */
 void Insert_AVL(AVL_tree *AVL, int key) {
   /* safe tag = 0 means insert error, default 1 */
@@ -400,7 +425,7 @@ void Insert_AVL(AVL_tree *AVL, int key) {
  * Arguements:
  *   -> AVL_tree *AVL: The AVL tree include the node to be deleted
  *   -> int key: The key of the node to be inserted
- * Return: NULL
+ * Return: None
  */
 void Delete_AVL(AVL_tree *AVL, int key) {
   AVL_node *node = search_avl(AVL->root, key);
@@ -417,8 +442,46 @@ void Delete_AVL(AVL_tree *AVL, int key) {
  *   -> AVL_tree *AVL: The AVL tree to be traverse
  *   -> int option: pre/in/postorder traverse
  *   -> void (*visit)(int): The visit function
- * Return: NULL
+ * Return: None
  */
 void Traverse_AVL(AVL_tree *AVL, int option, void (*visit)(int)) {
   traverse_avl(AVL->root, option, visit);
+}
+
+/*
+ * API name: Save_AVL
+ * Usage: Save AVL tree to a file
+ * Arguements:
+ *   -> AVL_tree *AVL: The AVL tree to be saved
+ *   -> const char *path: The data file path
+ * Return: status
+ */
+int Save_AVL(AVL_tree *AVL, const char *path) {
+  FILE *fp = fopen(path, "w");
+  if (fp == NULL)
+    return ERROR;
+  fprintf(fp, "%d %d %d\n", AVL->id, AVL->kind, AVL->num);
+  save_avl(AVL->root, fp);
+  return OK;
+}
+
+/*
+ * API name: Load_AVL
+ * Usage: Load AVL tree from a file
+ * Arguements:
+ *   -> AVL_tree *AVL: The AVL tree to receive data
+ *   -> const char *path: The data file path
+ * Return: status
+ */
+int Load_AVL(AVL_tree *AVL, const char *path) {
+  FILE *fp = fopen(path, "r");
+  if (fp == NULL)
+    return ERROR;
+  int id, kind, num;
+  fscanf(fp, "%d %d %d\n", &id, &kind, &num);
+  AVL->id = id;
+  AVL->kind = kind;
+  AVL->num = num;
+  load_avl(AVL->root, fp);
+  return OK;
 }

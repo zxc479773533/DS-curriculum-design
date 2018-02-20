@@ -10,6 +10,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Status */
+#define ERROR 0
+#define OK 1
+
 /* The kind of AVL tree */
 #define FRIENDS 0
 #define FOLLOWERS 1
@@ -27,8 +31,8 @@
 typedef struct AVL_node {
   int key;         /* node key */
   int height;      /* node height */
-  AVL_node *left_child;
-  AVL_node *right_child;
+  struct AVL_node *left_child;
+  struct AVL_node *right_child;
 } AVL_node;
 
 /* The tree struct */
@@ -47,6 +51,8 @@ int Search_AVL(AVL_tree *AVL, int key);
 void Insert_AVL(AVL_tree *AVL, int key);
 void Delete_AVL(AVL_tree *AVL, int key);
 void Traverse_AVL(AVL_tree *AVL, int option, void (*visit)(int));
+int Save_AVL(AVL_tree *AVL, const char *path);
+int Load_AVL(AVL_tree *AVL, const char *path);
 
 /* Functions */
 int avl_height(AVL_node *tree);
@@ -61,5 +67,7 @@ AVL_node* insert_avl(AVL_node *tree, int key, int *safe_tag);
 AVL_node* delete_avl(AVL_node *tree, AVL_node *node);
 AVL_node* clear_avl(AVL_node *tree);
 void traverse_avl(AVL_node *tree, int option, void (*visit)(int));
+void save_avl(AVL_node *tree, FILE *fp);
+void load_avl(AVL_node *tree, FILE *fp);
 
 #endif // !PY_AVL_LIB
