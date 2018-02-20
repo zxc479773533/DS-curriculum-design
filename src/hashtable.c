@@ -77,6 +77,22 @@ int delete_Hash(HashNode **Hash, int key, int hashlen) {
 }
 
 /*
+ * search_Hash -> Search a node in an Hash table
+ * 
+ * return <- The node
+ */
+HashNode* search_Hash(HashNode **Hash, int key, int hashlen) {
+  int index = HashFunc(key, hashlen);
+  HashNode *node = Hash[index]->next;
+  while (node != NULL) {
+    if (node->key == key && node->count > 0)
+      return node;
+    node = node->next;
+  }
+  return NULL;
+}
+
+/*
  * save_Hash -> Save Hash table to a file
  * 
  * return <- None
@@ -147,7 +163,7 @@ int Insert_Hash(HashTable *MyHash, int key, char *value) {
  * API name: Delete_Hash
  * Usage: Delete a node in hash table
  * Arguements:
- *   -> HashTable *MyHash: The Hash table to be Delete
+ *   -> HashTable *MyHash: The Hash table to be deleted
  *   -> int key: The key of node to be deleted
  * Return:
  *   -> int status: The status of this function
@@ -159,6 +175,22 @@ int Delete_Hash(HashTable *MyHash, int key) {
   if (status == OK)
     MyHash->num--;
   return status;
+}
+
+/*
+ * API name: Search_Hash
+ * Usage: Search a node in an Hash table
+ * Arguements:
+ *   -> HashTable *MyHash: The Hash table to be searched
+ *   -> int key: The key of node to be searched
+ * Return:
+ *   -> int status: The value of the node
+ */
+char* Search_Hash(HashTable *MyHash, int key) {
+  if (MyHash->num == 0)
+    return NULL;
+  HashNode *node = search_Hash(&(MyHash->Hash), key, MyHash->hashlen);
+  return node->value;
 }
 
 /*

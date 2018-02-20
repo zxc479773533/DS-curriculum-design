@@ -34,6 +34,7 @@ typedef struct HashTable {
 HashTable* Init_Hash(int hashlen);
 int Insert_Hash(HashTable *MyHash, int key, char *value);
 int Delete_Hash(HashTable *MyHash, int key);
+char* Search_Hash(HashTable *MyHash, int key);
 int Save_Hash(HashTable *MyHash, const char *path);
 int Load_Hash(HashTable *MyHash, const char *path);
 
@@ -41,6 +42,7 @@ int Load_Hash(HashTable *MyHash, const char *path);
 int HashFunc(int key, int mod);
 int insert_Hash(HashNode **Hash, int key, char *value, int hashlen);
 int delete_Hash(HashNode **Hash, int key, int hashlen);
+HashNode* search_Hash(HashNode **Hash, int key, int hashlen);
 void save_Hash(HashNode **Hash, int hashlen, FILE *fp);
 void load_Hash(HashNode **Hash, int hashlen, FILE *fp);
 
