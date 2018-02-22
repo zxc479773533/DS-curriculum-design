@@ -93,6 +93,21 @@ HashNode* search_Hash(HashNode **Hash, int key, int hashlen) {
 }
 
 /*
+ * change_Hash -> Change an Hash node's name
+ * 
+ * return <- The state
+ */
+int change_Hash(HashNode **Hash, int key, char *value, int hashlen) {
+  HashNode *node = search_Hash(Hash, key, hashlen);
+  if (node == NULL)
+    return ERROR;
+  else {
+    strcpy(node->value, value);
+    return OK;
+  }
+}
+
+/*
  * traverse_Hash -> Traverse Hash table
  * 
  * return <- None
@@ -246,6 +261,27 @@ int Load_Hash(HashTable *MyHash, const char *path) {
   return OK;
 }
 
+/*
+ * API name: Traverse_Hash
+ * Usage: Traverse Hash table
+ * Arguements:
+ *   -> HashTable *MyHash: The Hash table to be traversed
+ *   -> void (*visit)(struct HashNode*): The traverse function
+ * Return: None
+ */
 void Traverse_Hash(HashTable *MyHash ,void (*visit)(struct HashNode*)) {
   traverse_Hash(&(MyHash->Hash), MyHash->hashlen, visit);
+}
+
+/*
+ * API name: Change_Hash
+ * Usage: Change an Hash node's name
+ * Arguements:
+ *   -> HashTable *MyHash: The Hash table to be changed
+ *   -> int key: The node's key
+ *   -> char *value: The new value
+ * Return: None
+ */
+int Change_Hash(HashTable *MyHash, int key, char *value) {
+  return change_Hash(&(MyHash->Hash), key, value, MyHash->hashlen);
 }

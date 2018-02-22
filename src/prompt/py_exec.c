@@ -13,6 +13,9 @@
 /* Function prototypes */
 void print_help(void);
 
+/* User database */
+const char database_path[] = "./src/data/users";
+
 int builtin_cmd(char **argv) {
   /* Not a built-in command */
   if (!strcmp(argv[0], "quit")) {
