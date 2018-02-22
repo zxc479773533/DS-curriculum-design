@@ -21,7 +21,7 @@ char theme[] = "Here to control a friend and followers management system";
 /* Founction prototypes */
 void print_usage(void);
 void eval(char *cmdline);
-void parseline(char *buf, char **argv);
+int parseline(const char *cmdline, char **argv);
 
 int Start_Shell(int argc, char **argv) {
   char ch;
@@ -83,14 +83,60 @@ int Start_Shell(int argc, char **argv) {
 void eval(char *cmdline) {
   char *argv[MAXARGS];
   char buf[MAXLINE];
+  int argc;
 
   /* Parse command */
-  parseline(buf, argv);
+  argc = parseline(buf, argv);
 
   if (argv[0] == NULL)
     return;
   
   if (!builtin_cmd(argv)) {
-    py_execute(argv[0], argv);
+    py_execute(argv[0], argc, argv);
   }
+}
+
+/*
+ * parseline - Parse the command line and build the argv array.
+ */
+int parseline(const char *cmdline, char **argv) {
+  /* Holds local copy of command line */
+  static char array[MAXLINE];
+  char *buf = array;
+  char *delim;
+  int argc;
+  
+  strcpy(buf, cmdline);
+  buf[strlen(buf) - 1] = ' ';
+  /* Ignore leading spaces */
+  while (*buf && (*buf == ' '))
+    buf++;
+
+  /* Build the argv list */
+  argc = 0;
+  if (*buf == '\'') {
+    buf++;
+    delim = strchr(buf, '\'');
+  }
+  else {
+    delim = strchr(buf, ' ');
+  }
+
+  while(delim) {
+    argv[argc++] = buf;
+    *delim = '\0';
+    buf = delim + 1;
+    while (*buf && (*buf == ' '))
+      buf++;
+    
+    if (*buf == '\'') {
+      buf++;
+      delim = strchr(buf, '\'');
+    }
+    else {
+      delim = strchr(buf, ' ');
+    }
+  }
+  argv[argc] = NULL;
+  return argc;
 }

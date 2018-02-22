@@ -93,6 +93,22 @@ HashNode* search_Hash(HashNode **Hash, int key, int hashlen) {
 }
 
 /*
+ * traverse_Hash -> Traverse Hash table
+ * 
+ * return <- None
+ */
+void traverse_Hash(HashNode **Hash, int hashlen, void (*visit)(struct HashNode*)) {
+  int index;
+  for (index = 0; index < hashlen; index++) {
+    HashNode *node = Hash[index]->next;
+    while (node != NULL) {
+      (*visit)(node);
+      node = node->next;
+    }
+  }
+}
+
+/*
  * save_Hash -> Save Hash table to a file
  * 
  * return <- None
@@ -109,7 +125,7 @@ void save_Hash(HashNode **Hash, int hashlen, FILE *fp) {
 }
 
 /*
- * save_Hash -> Load Hash table from a file
+ * load_Hash -> Load Hash table from a file
  * 
  * return <- None
  */
@@ -228,4 +244,8 @@ int Load_Hash(HashTable *MyHash, const char *path) {
   MyHash->hashlen = hashlen;
   load_Hash(&(MyHash->Hash), MyHash->hashlen, fp);
   return OK;
+}
+
+void Traverse_Hash(HashTable *MyHash ,void (*visit)(struct HashNode*)) {
+  traverse_Hash(&(MyHash->Hash), MyHash->hashlen, visit);
 }
