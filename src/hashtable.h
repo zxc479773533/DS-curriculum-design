@@ -31,14 +31,14 @@ typedef struct HashTable {
 } HashTable;
 
 /* APIs */
-HashTable* Init_Hash(int hashlen);
-int Insert_Hash(HashTable *MyHash, int key, char *value);
-int Delete_Hash(HashTable *MyHash, int key);
-char* Search_Hash(HashTable *MyHash, int key);
-int Change_Hash(HashTable *MyHash, int key, char *value);
-void Traverse_Hash(HashTable *MyHash ,void (*visit)(struct HashNode*));
-int Save_Hash(HashTable *MyHash, const char *path);
-int Load_Hash(HashTable *MyHash, const char *path);
+extern HashTable* Init_Hash(int hashlen);
+extern int Insert_Hash(HashTable *MyHash, int key, char *value);
+extern int Delete_Hash(HashTable *MyHash, int key);
+extern char* Search_Hash(HashTable *MyHash, int key);
+extern int Change_Hash(HashTable *MyHash, int key, char *value);
+extern void Traverse_Hash(HashTable *MyHash ,void (*visit)(struct HashNode*));
+extern int Save_Hash(HashTable *MyHash, const char *path);
+extern int Load_Hash(HashTable *MyHash, const char *path);
 
 /* Functions */
 int HashFunc(int key, int mod);

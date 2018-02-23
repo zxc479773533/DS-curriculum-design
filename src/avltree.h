@@ -44,15 +44,15 @@ typedef struct AVL_tree {
 } AVL_tree;
 
 /* APIs */
-AVL_tree* Init_AVL(int kind, int id);
-void Destroy_AVL(AVL_tree *AVL);
-void Clear_AVL(AVL_tree *AVL);
-int Search_AVL(AVL_tree *AVL, int key);
-void Insert_AVL(AVL_tree *AVL, int key);
-void Delete_AVL(AVL_tree *AVL, int key);
-void Traverse_AVL(AVL_tree *AVL, int option, void (*visit)(int));
-int Save_AVL(AVL_tree *AVL, const char *path);
-int Load_AVL(AVL_tree *AVL, const char *path);
+extern AVL_tree* Init_AVL(int kind, int id);
+extern void Destroy_AVL(AVL_tree *AVL);
+extern void Clear_AVL(AVL_tree *AVL);
+extern int Search_AVL(AVL_tree *AVL, int key);
+extern void Insert_AVL(AVL_tree *AVL, int key);
+extern void Delete_AVL(AVL_tree *AVL, int key);
+extern void Traverse_AVL(AVL_tree *AVL, int option, void (*visit)(int));
+extern int Save_AVL(AVL_tree *AVL, const char *path);
+extern int Load_AVL(AVL_tree *AVL, const char *path);
 
 /* Functions */
 int avl_height(AVL_node *tree);

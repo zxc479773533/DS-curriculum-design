@@ -47,7 +47,7 @@ int Start_Shell(int argc, char **argv) {
   /* Print informations */
   printf("[INFO] Wherecome to Pan Yue's interactive shell!\n");
   printf("[INFO] %s\n", theme);
-  printf("[INFO] Try help() to see how to use this Controller\n");
+  printf("[INFO] Try help to see how to use this Controller\n");
 
   /* Excute the shell's read/eval loop */
   while (1) {
@@ -92,7 +92,10 @@ void eval(char *cmdline) {
     return;
   
   if (!builtin_cmd(argv)) {
-    py_execute(argv[0], argc, argv);
+    if (!py_execute(argv[0], argc, argv))
+      printf("[INFO] pysh: command not found.\n");
+    else
+      printf("[INFO] Operation finished.\n");
   }
 }
 

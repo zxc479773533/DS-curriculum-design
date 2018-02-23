@@ -462,6 +462,7 @@ int Save_AVL(AVL_tree *AVL, const char *path) {
     return ERROR;
   fprintf(fp, "%d %d %d\n", AVL->id, AVL->kind, AVL->num);
   save_avl(AVL->root, fp);
+  fclose(fp);
   return OK;
 }
 
@@ -483,5 +484,6 @@ int Load_AVL(AVL_tree *AVL, const char *path) {
   AVL->kind = kind;
   AVL->num = num;
   load_avl(AVL->root, fp);
+  fclose(fp);
   return OK;
 }

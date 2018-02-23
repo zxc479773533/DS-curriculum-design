@@ -238,6 +238,7 @@ int Save_Hash(HashTable *MyHash, const char *path) {
     return ERROR;
   fprintf(fp, "%d %d\n", MyHash->num, MyHash->hashlen);
   save_Hash(&(MyHash->Hash), MyHash->hashlen, fp);
+  fclose(fp);
   return OK;
 }
 
@@ -258,6 +259,7 @@ int Load_Hash(HashTable *MyHash, const char *path) {
   MyHash->num = num;
   MyHash->hashlen = hashlen;
   load_Hash(&(MyHash->Hash), MyHash->hashlen, fp);
+  fclose(fp);
   return OK;
 }
 
