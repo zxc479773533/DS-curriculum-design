@@ -24,7 +24,7 @@ int parseline(const char *cmdline, char **argv);
 
 /* Print usage messages */
 void print_usage(void) {
-  printf("Usage: py_manager\n");
+  printf("Usage: py_manager [options]\n");
   printf("Options:\n");
   printf("\t-h: print this massges\n");
   printf("\t-p: hide the prompt\n");
