@@ -67,6 +67,7 @@ int delete_Hash(HashNode **Hash, int key, int hashlen) {
     if (node->key == key) {
       if (node->count > 0) {
         node->count--;
+        strcpy(node->value, "Disable");
         status = OK;
       }
       break;
@@ -148,7 +149,7 @@ void load_Hash(HashNode **Hash, int hashlen, FILE *fp) {
   int index;
   int key;
   char value[12];
-  while (fscanf(fp, "%d %s\n", &key, value) != 0) {
+  while (fscanf(fp, "%d %s\n", &key, value) == 2) {
     insert_Hash(Hash, key, value, hashlen);
   }
 }
@@ -169,8 +170,14 @@ HashTable* Init_Hash(int hashlen) {
   HashTable *MyHash = (HashTable*)malloc(sizeof(HashTable));
   MyHash->num = 0;
   MyHash->hashlen = hashlen;
-  MyHash->Hash = (HashNode*)malloc(sizeof(HashNode) * hashlen);
+  MyHash->Hash = (HashNode**)malloc(sizeof(HashNode) * hashlen);
   memset(MyHash->Hash, 0, sizeof(HashNode) * hashlen);
+  for (int i = 0; i < hashlen; i++) {
+    MyHash->Hash[i] = (HashNode*)malloc(sizeof(HashNode));
+    MyHash->Hash[i]->key = 0;
+    MyHash->Hash[i]->count = 0;
+    MyHash->Hash[i]->next = NULL;    
+  }
   return MyHash;
 }
 
@@ -184,7 +191,7 @@ HashTable* Init_Hash(int hashlen) {
  *   -> int status: The status of this function
  */
 int Insert_Hash(HashTable *MyHash, int key, char *value) {
-  int status = insert_Hash(&(MyHash->Hash), key, value, MyHash->hashlen);
+  int status = insert_Hash(MyHash->Hash, key, value, MyHash->hashlen);
   if (status == OK)
     MyHash->num++;
   return status;
@@ -202,9 +209,9 @@ int Insert_Hash(HashTable *MyHash, int key, char *value) {
 int Delete_Hash(HashTable *MyHash, int key) {
   if (MyHash->num == 0)
     return ERROR;
-  int status = delete_Hash(&(MyHash->Hash), key, MyHash->hashlen);
-  if (status == OK)
-    MyHash->num--;
+  int status = delete_Hash(MyHash->Hash, key, MyHash->hashlen);
+  /*if (status == OK)
+    MyHash->num--;*/
   return status;
 }
 
@@ -220,8 +227,11 @@ int Delete_Hash(HashTable *MyHash, int key) {
 char* Search_Hash(HashTable *MyHash, int key) {
   if (MyHash->num == 0)
     return NULL;
-  HashNode *node = search_Hash(&(MyHash->Hash), key, MyHash->hashlen);
-  return node->value;
+  HashNode *node = search_Hash(MyHash->Hash, key, MyHash->hashlen);
+  if (node != NULL)
+    return node->value;
+  else
+    return NULL;
 }
 
 /*
@@ -237,7 +247,7 @@ int Save_Hash(HashTable *MyHash, const char *path) {
   if (fp == NULL)
     return ERROR;
   fprintf(fp, "%d %d\n", MyHash->num, MyHash->hashlen);
-  save_Hash(&(MyHash->Hash), MyHash->hashlen, fp);
+  save_Hash(MyHash->Hash, MyHash->hashlen, fp);
   fclose(fp);
   return OK;
 }
@@ -258,7 +268,7 @@ int Load_Hash(HashTable *MyHash, const char *path) {
   fscanf(fp, "%d %d\n", &num, &hashlen);
   MyHash->num = num;
   MyHash->hashlen = hashlen;
-  load_Hash(&(MyHash->Hash), MyHash->hashlen, fp);
+  load_Hash(MyHash->Hash, MyHash->hashlen, fp);
   fclose(fp);
   return OK;
 }
@@ -272,7 +282,7 @@ int Load_Hash(HashTable *MyHash, const char *path) {
  * Return: None
  */
 void Traverse_Hash(HashTable *MyHash ,void (*visit)(struct HashNode*)) {
-  traverse_Hash(&(MyHash->Hash), MyHash->hashlen, visit);
+  traverse_Hash(MyHash->Hash, MyHash->hashlen, visit);
 }
 
 /*
@@ -285,5 +295,5 @@ void Traverse_Hash(HashTable *MyHash ,void (*visit)(struct HashNode*)) {
  * Return: None
  */
 int Change_Hash(HashTable *MyHash, int key, char *value) {
-  return change_Hash(&(MyHash->Hash), key, value, MyHash->hashlen);
+  return change_Hash(MyHash->Hash, key, value, MyHash->hashlen);
 }

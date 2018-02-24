@@ -20,15 +20,15 @@ const char database_path[] = "./src/data/users.txt";
 
 /* Add functions */
 void Add_user(int user_id, char *user_name);
-void Add_friend(int user_id, int friend_id);
-void Add_follower(int user_id, int follower_id);
-void Add_following(int user_id, int following_id);
+void Add_friend(int user_id, int friend_id, int tag);
+void Add_follower(int user_id, int follower_id, int tag);
+void Add_following(int user_id, int following_id, int tag);
 
 /* Delete functions */
 void Delete_user(int user_id);
-void Delete_friend(int user_id, int friend_id);
-void Delete_follower(int user_id, int follower_id);
-void Delete_following(int user_id, int following_id);
+void Delete_friend(int user_id, int friend_id, int tag);
+void Delete_follower(int user_id, int follower_id, int tag);
+void Delete_following(int user_id, int following_id, int tag);
 
 /* Find functions */
 void Find_user(int user_id);
@@ -53,18 +53,53 @@ void Change_name(int user_id, char *new_name);
  * print_help - Print help messages
  */
 void print_help(void) {
-  printf("Test help [To be writed...]\n");
+  printf("User Manage System vesion 1.0\n");
+  printf("Author: Pan Yue\n");
+  printf("Basic function:\n");
+  printf("    help: Display User's Manual\n");
+  printf("    show: Show all users in database\n");
+  printf("    rename: Change a user's name\n");
+  printf("    rename [user ID] [new name]\n");
+  printf("\n");
+  printf("    add: Add data\n");
+  printf("    add [option] [arg1] [arg2]\n");
+  printf("        option=user, add a user, [arg1]=user ID, [arg2]=user name\n");
+  printf("        option=friend, add a friend, [arg1]=user ID, [arg2]=friend ID\n");
+  printf("        option=follower, add a follower, [arg1]=user ID, [arg2]=follower ID\n");
+  printf("        option=following, add a following, [arg1]=user ID, [arg2]=following ID\n");
+  printf("\n");
+  printf("    delete: Delete data\n");
+  printf("    delete [option] [arg1] [arg2]\n");
+  printf("        option=user, delete a user, [arg1]=user ID\n");
+  printf("        option=friend, delete a friend, [arg1]=user ID, [arg2]=friend ID\n");
+  printf("        option=follower, delete a follower, [arg1]=user ID, [arg2]=follower ID\n");
+  printf("        option=following, delete a following, [arg1]=user ID, [arg2]=following ID\n");
+  printf("\n");
+  printf("    find: Find data\n");
+  printf("    find [option] [arg1] [arg2]\n");
+  printf("        option=user, find a user, [arg1]=user ID\n");
+  printf("        option=friend, find a friend, [arg1]=user ID, [arg2]=friend ID\n");
+  printf("        option=follower, find a follower, [arg1]=user ID, [arg2]=follower ID\n");
+  printf("        option=following, find a following, [arg1]=user ID, [arg2]=following ID\n");
+  printf("\n");
+  printf("    display: Display data\n");
+  printf("    display [option] [user ID]\n");
+  printf("        option=friend/follower/following, then display this user's all [option]\n");
+  printf("\n");
+  printf("   common: Display common data of 2 users\n");
+  printf("   common [option] [user A] [user B]\n");
+  printf("        option=friend/follower/following, then display 2 user's common [option]\n");
 }
 
 /* Assist function to show users */
 void show_users_visit(HashNode *node) {
-  printf("%12d,%18s", node->key, node->value);
+  printf("%12d %18s\n", node->key, node->value);
 }
 
 void show_users(void) {
   HashTable *MyHash = Init_Hash(HASHLEN);
   Load_Hash(MyHash, database_path);
-  printf("%12s %18s", "User ID", "Name");
+  printf("%12s %18s", "User ID", "Name\n");
   Traverse_Hash(MyHash, show_users_visit);
 }
 
@@ -75,7 +110,7 @@ void show_users(void) {
  */
 int builtin_cmd(char **argv) {
   /* Not a built-in command */
-  if (!strcmp(argv[0], "quit")) {
+  if (!strcmp(argv[0], "exit")) {
     printf("[INFO] User-exit. Terminated!\n");
     exit(0);
   }
@@ -97,7 +132,7 @@ int builtin_cmd(char **argv) {
  * return <- None
  */
 void generate_filename(Set *Set, char *filename) {
-  sprintf(filename, "%d-%d.txt", Set->Elem->id, Set->Elem->kind);
+  sprintf(filename, "./src/data/%d-%d.txt", Set->Elem->id, Set->Elem->kind);
 }
 
 /*
@@ -107,88 +142,88 @@ void generate_filename(Set *Set, char *filename) {
  */
 int py_execute(char *func , int argc, char **argv) {
   if (!strcmp(func, "add")) {
-    if (!strcmp(argv[1], "user") && argc == 4) {
+    if (argc == 4 && !strcmp(argv[1], "user")) {
       Add_user(atoi(argv[2]), argv[3]);
       return 1;
     }
-    else if (!strcmp(argv[1], "friend") && argc == 4) {
-      Add_friend(atoi(argv[2]), atoi(argv[3]));
+    else if (argc == 4 && !strcmp(argv[1], "friend")) {
+      Add_friend(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
-    else if (!strcmp(argv[1], "follower") && argc == 4) {
-      Add_follower(atoi(argv[2]), atoi(argv[3]));
+    else if (argc == 4 && !strcmp(argv[1], "follower")) {
+      Add_follower(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
-    else if (!strcmp(argv[1], "following") && argc == 4) {
-      Add_following(atoi(argv[2]), atoi(argv[3]));
+    else if (argc == 4 && !strcmp(argv[1], "following")) {
+      Add_following(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
   }
   else if (!strcmp(func, "delete")) {
-    if (!strcmp(argv[1], "user") && argc == 3) {
+    if (argc == 3 && !strcmp(argv[1], "user")) {
       Delete_user(atoi(argv[2]));
       return 1;
     }
-    else if (!strcmp(argv[1], "friend") && argc == 4) {
-      Delete_friend(atoi(argv[2]), atoi(argv[3]));
+    else if (argc == 4 && !strcmp(argv[1], "friend")) {
+      Delete_friend(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
-    else if (!strcmp(argv[1], "follower") && argc == 4) {
-      Delete_follower(atoi(argv[2]), atoi(argv[3]));
+    else if (argc == 4 && !strcmp(argv[1], "follower")) {
+      Delete_follower(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
-    else if (!strcmp(argv[1], "following") && argc == 4) {
-      Delete_follower(atoi(argv[2]), atoi(argv[3]));
+    else if (argc == 4 && !strcmp(argv[1], "following")) {
+      Delete_follower(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
   }
   else if (!strcmp(func, "find")) {
-    if (!strcmp(argv[1], "user") && argc == 3) {
+    if (argc == 3 && !strcmp(argv[1], "user")) {
       Find_user(atoi(argv[2]));
       return 1;
     }
-    else if (!strcmp(argv[1], "friend") && argc == 4) {
+    else if (argc == 4 && !strcmp(argv[1], "friend")) {
       Find_friend(atoi(argv[2]), atoi(argv[3]));
       return 1;
     }
-    else if (!strcmp(argv[1], "follower") && argc == 4) {
+    else if (argc == 4 && !strcmp(argv[1], "follower")) {
       Find_follower(atoi(argv[2]), atoi(argv[3]));
       return 1;
     }
-    else if (!strcmp(argv[1], "following") && argc == 4) {
+    else if (argc == 4 && !strcmp(argv[1], "following")) {
       Find_following(atoi(argv[2]), atoi(argv[3]));
       return 1;
     }
   }
   else if (!strcmp(func, "display")) {
-    if (!strcmp(argv[1], "friend") && argc == 3) {
+    if (argc == 3 && !strcmp(argv[1], "friend")) {
       Display_friend(atoi(argv[2]));
       return 1;
     }
-    else if (!strcmp(argv[1], "follower") && argc == 3) {
+    else if (argc == 4 && !strcmp(argv[1], "follower")) {
       Display_follower(atoi(argv[2]));
       return 1;
     }
-    else if (!strcmp(argv[1], "following") && argc == 3) {
+    else if (argc == 4 && !strcmp(argv[1], "following")) {
       Display_following(atoi(argv[2]));
       return 1;
     }
   }
   else if (!strcmp(func, "common")) {
-    if (!strcmp(argv[1], "friend") && argc == 4) {
+    if (argc == 4 && !strcmp(argv[1], "friend")) {
       Common_friends(atoi(argv[2]), atoi(argv[3]));
       return 1;
     }
-    else if (!strcmp(argv[1], "follower") && argc == 4) {
+    else if (argc == 4 && !strcmp(argv[1], "follower")) {
       Common_followers(atoi(argv[2]), atoi(argv[3]));
       return 1;
     }
-    else if (!strcmp(argv[1], "following") && argc == 4) {
+    else if (argc == 4 && !strcmp(argv[1], "following")) {
       Common_followings(atoi(argv[2]), atoi(argv[3]));
       return 1;
     }
   }
-  else if (!strcmp(func, "rename") && argc == 3) {
+  else if (argc == 3 && !strcmp(func, "rename")) {
     Change_name(atoi(argv[1]), argv[2]);
     return 1;
   }
@@ -215,7 +250,7 @@ void Add_user(int user_id, char *user_name) {
   int status;
   HashTable *MyHash = Init_Hash(HASHLEN);
   Load_Hash(MyHash, database_path);
-  status =  Insert_Hash(MyHash, user_id, user_name);
+  status = Insert_Hash(MyHash, user_id, user_name);
   Save_Hash(MyHash, database_path);
   /* Print info */
   if (status == EXISTS)
@@ -227,55 +262,58 @@ void Add_user(int user_id, char *user_name) {
 /*
  * Add_friend - Add a new friend in a user's set
  */
-void Add_friend(int user_id, int friend_id) {
+void Add_friend(int user_id, int friend_id, int tag) {
   /* Check if user exists */
   if (!check_user(user_id) || !check_user(friend_id)) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FRIENDS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
   Set_Insert(new_set, friend_id);
   Save_AVL(new_set->Elem, filename);
-  Add_friend(friend_id, user_id);
+  if (tag == 1)
+    Add_friend(friend_id, user_id, 0);
 }
 
 /*
  * Add_follower - Add a new follower in a user's set
  */
-void Add_follower(int user_id, int follower_id) {
+void Add_follower(int user_id, int follower_id, int tag) {
   /* Check if user exists */
   if (!check_user(user_id) || !check_user(follower_id)) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWERS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
   Set_Insert(new_set, follower_id);
   Save_AVL(new_set->Elem, filename);
-  Add_following(follower_id, user_id);
+  if (tag == 1)
+    Add_following(follower_id, user_id, 0);
 }
 
 /*
  * Add_following - Add a new following in a user's set
  */
-void Add_following(int user_id, int following_id) {
+void Add_following(int user_id, int following_id, int tag) {
   /* Check if user exists */
   if (!check_user(user_id) || !check_user(following_id)) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWING, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
   Set_Insert(new_set, following_id);
   Save_AVL(new_set->Elem, filename);
-  Add_follower(following_id, user_id);
+  if (tag == 1)
+    Add_follower(following_id, user_id, 0);
 }
 
 /*
@@ -294,55 +332,58 @@ void Delete_user(int user_id) {
 /*
  * Delete_friend - Delete a friend in a user's set
  */
-void Delete_friend(int user_id, int friend_id) {
+void Delete_friend(int user_id, int friend_id, int tag) {
   /* Check if user exists */
   if (!check_user(user_id) || !check_user(friend_id)) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FRIENDS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
   Set_Delete(new_set, friend_id);
   Save_AVL(new_set->Elem, filename);
-  Delete_friend(friend_id, user_id);
+  if (tag == 1)
+    Delete_friend(friend_id, user_id, 0);
 }
 
 /*
  * Delete_follower - Delete a follower in a user's set
  */
-void Delete_follower(int user_id, int follower_id) {
+void Delete_follower(int user_id, int follower_id, int tag) {
   /* Check if user exists */
   if (!check_user(user_id) || !check_user(follower_id)) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWERS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
   Set_Delete(new_set, follower_id);
   Save_AVL(new_set->Elem, filename);
-  Delete_following(follower_id, user_id);
+  if (tag == 1)
+    Delete_following(follower_id, user_id, 0);
 }
 
 /*
  * Delete_following - Delete a follower in a user's set
  */
-void Delete_following(int user_id, int following_id) {
+void Delete_following(int user_id, int following_id, int tag) {
   /* Check if user exists */
   if (!check_user(user_id) || !check_user(following_id)) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWING, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
   Set_Delete(new_set, following_id);
   Save_AVL(new_set->Elem, filename);
-  Delete_follower(following_id, user_id);
+  if (tag == 1)
+    Delete_follower(following_id, user_id, 0);
 }
 
 /*
@@ -367,7 +408,7 @@ void Find_user(int user_id) {
   Load_AVL(follower_set->Elem, follower_file);
   Load_AVL(following_set->Elem, following_file);
   printf("User ID: %d\n", user_id);
-  printf("User Name: %s", user_name);
+  printf("User Name: %s\n", user_name);
   printf("Friend: %d\n", friend_set->Elem->num);
   printf("Follower: %d\n", follower_set->Elem->num);
   printf("Following: %d\n", following_set->Elem->num);
@@ -382,7 +423,7 @@ void Find_friend(int user_id, int friend_id) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FRIENDS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
@@ -405,7 +446,7 @@ void Find_follower(int user_id, int follower_id) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWERS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
@@ -428,7 +469,7 @@ void Find_following(int user_id, int following_id) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWING, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
@@ -459,7 +500,7 @@ void Display_friend(int user_id) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FRIENDS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
@@ -475,7 +516,7 @@ void Display_follower(int user_id) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWERS, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
@@ -491,7 +532,7 @@ void Display_following(int user_id) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename[20];
+  char filename[25];
   Set *new_set = Set_Init(FOLLOWING, user_id);
   generate_filename(new_set, filename);
   Load_AVL(new_set->Elem, filename);
@@ -566,4 +607,5 @@ void Change_name(int user_id, char *new_name) {
   Load_Hash(MyHash, database_path);
   if(Change_Hash(MyHash, user_id, new_name) ==  ERROR)
     printf("[ERROR] Change failed! Please check your input.\n");
+  Save_Hash(MyHash, database_path);
 }

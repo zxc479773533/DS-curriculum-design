@@ -68,6 +68,6 @@ AVL_node* delete_avl(AVL_node *tree, AVL_node *node);
 AVL_node* clear_avl(AVL_node *tree);
 void traverse_avl(AVL_node *tree, int option, void (*visit)(int));
 void save_avl(AVL_node *tree, FILE *fp);
-void load_avl(AVL_node *tree, FILE *fp);
+AVL_node* load_avl(AVL_node *tree, FILE *fp);
 
 #endif // !PY_AVL_LIB

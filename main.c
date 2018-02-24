@@ -3,7 +3,7 @@
  * Developed by Pan Yue
  * zxc479773533@gmail.com
  */
-#include "prompt/py_prompt.c"
+#include "src/prompt/py_prompt.c"
 
 int main(int argc, char **argv) {
   /* Let's start! */

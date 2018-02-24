@@ -63,6 +63,8 @@ void Set_Delete(Set *Set, int elem) {
  * return <- None
  */
 void Set_traverse(AVL_node *tree, AVL_tree *Set_B, AVL_tree *Set_result, void (*visit)(int, struct AVL_tree*, struct AVL_tree*)) {
+  if (tree == NULL)
+    return;
   Set_traverse(tree->left_child, Set_B, Set_result, visit);
   visit(tree->key, Set_B, Set_result);
   Set_traverse(tree->right_child, Set_B, Set_result, visit);

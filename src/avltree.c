@@ -292,6 +292,8 @@ AVL_node* clear_avl(AVL_node *tree) {
  * return <- None
  */
 void traverse_avl(AVL_node *tree, int option, void (*visit)(int)) {
+  if (tree == NULL)
+    return;
   if (option == PREORDER) {
     (*visit)(tree->key);
     traverse_avl(tree->left_child, option, visit);
@@ -315,6 +317,8 @@ void traverse_avl(AVL_node *tree, int option, void (*visit)(int)) {
  * return <- None
  */
 void save_avl(AVL_node *tree, FILE *fp) {
+  if (tree == NULL)
+    return;
   save_avl(tree->left_child, fp);
   fprintf(fp, "%d\n", tree->key);
   save_avl(tree->right_child, fp);
@@ -323,15 +327,16 @@ void save_avl(AVL_node *tree, FILE *fp) {
 /*
  * save_avl -> save the AVL tree to a file
  * 
- * return <- None
+ * return <- The root
  */
-void load_avl(AVL_node *tree, FILE *fp) {
+AVL_node* load_avl(AVL_node *tree, FILE *fp) {
   int key;
   /* This safe tag is of no use */
   int safe_tag = 1;
-  while (fscanf(fp, "%d\n", &key) != 0) {
-    insert_avl(tree, key, &safe_tag);
+  while (fscanf(fp, "%d\n", &key) == 1) {
+    tree = insert_avl(tree, key, &safe_tag);
   }
+  return tree;
 }
 
 /*
@@ -483,7 +488,7 @@ int Load_AVL(AVL_tree *AVL, const char *path) {
   AVL->id = id;
   AVL->kind = kind;
   AVL->num = num;
-  load_avl(AVL->root, fp);
+  AVL->root = load_avl(AVL->root, fp);
   fclose(fp);
   return OK;
 }

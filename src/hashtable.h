@@ -27,7 +27,7 @@ typedef struct HashNode {
 typedef struct HashTable {
   int num;
   int hashlen;
-  HashNode *Hash;
+  HashNode **Hash;
 } HashTable;
 
 /* APIs */

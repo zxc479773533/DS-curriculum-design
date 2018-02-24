@@ -15,13 +15,21 @@
 #define MAXARGS 128
 
 /* Global variables */
-char prompt[] = "py_prompt >";
+char prompt[] = "py_prompt > ";
 char theme[] = "Here to control a friend and followers management system";
 
 /* Founction prototypes */
-void print_usage(void);
 void eval(char *cmdline);
 int parseline(const char *cmdline, char **argv);
+
+/* Print usage messages */
+void print_usage(void) {
+  printf("Usage: py_manager\n");
+  printf("Options:\n");
+  printf("\t-h: print this massges\n");
+  printf("\t-p: hide the prompt\n");
+  printf("\tdefault: start shell\n");
+}
 
 int Start_Shell(int argc, char **argv) {
   char ch;
@@ -35,12 +43,13 @@ int Start_Shell(int argc, char **argv) {
     switch(ch) {
     case 'h':
       print_usage();
-      break;
+      exit(0);
     case 'p':
       emit_prompt = 0;
       break;
     default:
       print_usage();
+      exit(1);
     }
   }
 
@@ -86,6 +95,7 @@ void eval(char *cmdline) {
   int argc;
 
   /* Parse command */
+  strcpy(buf, cmdline);
   argc = parseline(buf, argv);
 
   if (argv[0] == NULL)
@@ -95,7 +105,7 @@ void eval(char *cmdline) {
     if (!py_execute(argv[0], argc, argv))
       printf("[INFO] pysh: command not found.\n");
     else
-      printf("[INFO] Operation finished.\n");
+      printf("[INFO] Operation finished.\n\n");
   }
 }
 
