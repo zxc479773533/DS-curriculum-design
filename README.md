@@ -20,7 +20,7 @@ CMake： `VERSION 3.9`
 
 ## Project Introduction
 
-A friends, followers and followings manage system developed in 2018 winter, with a shell like interface. The user database built by Hash table, the friend, followers and following set built by AVL tree. The whole requirements can be seen in `Requirements&Report` file.
+A friends, followers and followings manage system developed in 2018 winter, with a shell-like interface. The user database built by Hash table, the friend, followers and following set built by AVL tree. The whole requirements can be seen in `Requirements&Report` file.
 
 ## Usage
 
@@ -39,6 +39,8 @@ py_manager [options]
  ├── Makefile
  ├── main.c
  └── src/
+      ├── data/
+      │
       ├── prompt/
       │     ├── py_exec.c
       │     ├── py_prompt.c
