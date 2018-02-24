@@ -46,8 +46,14 @@ void Common_friends(int user_a, int user_b);
 void Common_followers(int user_a, int user_b);
 void Common_followings(int user_a, int user_b);
 
+/* Recommend functions */
+void Recommend_friends(int user_id);
+void Recommend_followers(int user_id);
+void Recommend_followings(int user_id);
+
 /* Others */
 void Change_name(int user_id, char *new_name);
+void Friends_recommend(int user_id);
 
 /*
  * print_help - Print help messages
@@ -220,6 +226,20 @@ int py_execute(char *func , int argc, char **argv) {
     }
     else if (argc == 4 && !strcmp(argv[1], "following")) {
       Common_followings(atoi(argv[2]), atoi(argv[3]));
+      return 1;
+    }
+  }
+  else if (argc == 3 && !strcmp(func, "recommend")) {
+    if (argc == 3 && !strcmp(argv[1], "friend")) {
+      Recommend_friends(atoi(argv[2]));
+      return 1;
+    }
+    else if (argc == 3 && !strcmp(argv[1], "follower")) {
+      Recommend_followers(atoi(argv[2]));
+      return 1;
+    }
+    else if (argc == 3 && !strcmp(argv[1], "following")) {
+      Recommend_followings(atoi(argv[2]));
       return 1;
     }
   }
@@ -548,7 +568,7 @@ void Common_friends(int user_a, int user_b) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename_a[20], filename_b[20];
+  char filename_a[25], filename_b[25];
   Set *set_a = Set_Init(FRIENDS, user_a);
   Set *set_b = Set_Init(FRIENDS, user_b);
   generate_filename(set_a, filename_a);
@@ -568,7 +588,7 @@ void Common_followers(int user_a, int user_b) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename_a[20], filename_b[20];
+  char filename_a[25], filename_b[25];
   Set *set_a = Set_Init(FOLLOWERS, user_a);
   Set *set_b = Set_Init(FOLLOWERS, user_b);
   generate_filename(set_a, filename_a);
@@ -588,7 +608,7 @@ void Common_followings(int user_a, int user_b) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
   }
-  char filename_a[20], filename_b[20];
+  char filename_a[25], filename_b[25];
   Set *set_a = Set_Init(FOLLOWING, user_a);
   Set *set_b = Set_Init(FOLLOWING, user_b);
   generate_filename(set_a, filename_a);
@@ -597,6 +617,88 @@ void Common_followings(int user_a, int user_b) {
   Load_AVL(set_b->Elem, filename_b);
   Set *common_set = Set_Intersection(set_a, set_b);
   Traverse_AVL(common_set->Elem, INORDER, dispaly_visit);
+}
+
+/* Assist function fow recommending */
+void traverse_and_add(AVL_node *node, Set *recommend_set) {
+  if (node == NULL)
+    return;
+  traverse_and_add(node->left_child, recommend_set);
+  Set_Insert(recommend_set, node->key);
+  traverse_and_add(node->right_child, recommend_set);
+}
+
+/* Assist function fow recommending */
+void traverse_and_recommend(AVL_node *node, Set *recommend_set) {
+  if (node == NULL)
+    return;
+  traverse_and_recommend(node->left_child, recommend_set);
+  char filename[25];
+  Set *friend_set = Set_Init(FRIENDS, node->key);
+  generate_filename(friend_set, filename);
+  Load_AVL(friend_set->Elem, filename);
+  traverse_and_add(friend_set->Elem->root, recommend_set);
+  traverse_and_recommend(node->right_child, recommend_set);
+}
+
+/*
+ * Recommend_friends - Recommend friends for a user
+ */
+void Recommend_friends(int user_id) {
+  /* Check if user exists */
+  if (!check_user(user_id)) {
+    printf("[ERROR] Failed! This user is not exists!\n");
+    return;
+  }
+  char filename[25];
+  Set *friend_set = Set_Init(FRIENDS, user_id);
+  Set *recommend_set = Set_Init(FRIENDS, user_id);
+  generate_filename(friend_set, filename);
+  Load_AVL(friend_set->Elem, filename);
+  traverse_and_recommend(friend_set->Elem->root, recommend_set);
+  Set_Delete(recommend_set, user_id);
+  recommend_set = Set_Difference(recommend_set, friend_set);  
+  Traverse_AVL(recommend_set->Elem, INORDER, dispaly_visit);
+}
+
+/*
+ * Recommend_followers - Recommend followers for a user
+ */
+void Recommend_followers(int user_id) {
+  /* Check if user exists */
+  if (!check_user(user_id)) {
+    printf("[ERROR] Failed! This user is not exists!\n");
+    return;
+  }
+  char filename[25];
+  Set *follower_set = Set_Init(FOLLOWERS, user_id);
+  Set *recommend_set = Set_Init(FOLLOWERS, user_id);
+  generate_filename(follower_set, filename);
+  Load_AVL(follower_set->Elem, filename);
+  traverse_and_recommend(follower_set->Elem->root, recommend_set);
+  Set_Delete(recommend_set, user_id);
+  recommend_set = Set_Difference(recommend_set, follower_set);
+  Traverse_AVL(recommend_set->Elem, INORDER, dispaly_visit);
+}
+
+/*
+ * Recommend_followings - Recommend followings for a user
+ */
+void Recommend_followings(int user_id) {
+  /* Check if user exists */
+  if (!check_user(user_id)) {
+    printf("[ERROR] Failed! This user is not exists!\n");
+    return;
+  }
+  char filename[25];
+  Set *following_set = Set_Init(FOLLOWING, user_id);
+  Set *recommend_set = Set_Init(FOLLOWING, user_id);
+  generate_filename(following_set, filename);
+  Load_AVL(following_set->Elem, filename);
+  traverse_and_recommend(following_set->Elem->root, recommend_set);
+  Set_Delete(recommend_set, user_id);
+  recommend_set = Set_Difference(recommend_set, following_set);
+  Traverse_AVL(recommend_set->Elem, INORDER, dispaly_visit);
 }
 
 /*

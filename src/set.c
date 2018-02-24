@@ -86,7 +86,7 @@ void visit_union(int elem, AVL_tree *Set_B, AVL_tree *Set_result) {
 void visit_difference(int elem, AVL_tree *Set_B, AVL_tree *Set_result) {
   int key = Search_AVL(Set_B, elem);
   if (key == 0)
-    Insert_AVL(Set_result, key);
+    Insert_AVL(Set_result, elem);
 }
 
 /*
