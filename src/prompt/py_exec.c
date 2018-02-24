@@ -59,7 +59,7 @@ void Friends_recommend(int user_id);
  * print_help - Print help messages
  */
 void print_help(void) {
-  printf("User Manage System vesion 1.0\n");
+  printf("User Manage System vesion 1.1\n");
   printf("Author: Pan Yue\n");
   printf("Basic function:\n");
   printf("    help: Display User's Manual\n");
@@ -92,8 +92,12 @@ void print_help(void) {
   printf("    display [option] [user ID]\n");
   printf("        option=friend/follower/following, then display this user's all [option]\n");
   printf("\n");
-  printf("   common: Display common data of 2 users\n");
-  printf("   common [option] [user A] [user B]\n");
+  printf("    recommend: Recommend for a user\n");
+  printf("    recommend [option] [user ID]\n");
+  printf("        option=friend/follower/following, then recommend [option] for user\n");
+  printf("\n");
+  printf("    common: Display common data of 2 users\n");
+  printf("    common [option] [user A] [user B]\n");
   printf("        option=friend/follower/following, then display 2 user's common [option]\n");
 }
 
