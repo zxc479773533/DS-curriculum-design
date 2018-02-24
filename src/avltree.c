@@ -220,7 +220,7 @@ AVL_node* delete_avl(AVL_node *tree, AVL_node *node) {
     }
   }
   /* Delete in right child tree */
-  else if (node->key > node->key) {
+  else if (node->key > tree->key) {
     tree->right_child = delete_avl(tree->right_child, node);
     /* Balanced it */
     if (avl_height(tree->left_child) - avl_height(tree->right_child) == 2) {
