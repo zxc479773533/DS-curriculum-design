@@ -210,11 +210,11 @@ int py_execute(char *func , int argc, char **argv) {
       Display_friend(atoi(argv[2]));
       return 1;
     }
-    else if (argc == 4 && !strcmp(argv[1], "follower")) {
+    else if (argc == 3 && !strcmp(argv[1], "follower")) {
       Display_follower(atoi(argv[2]));
       return 1;
     }
-    else if (argc == 4 && !strcmp(argv[1], "following")) {
+    else if (argc == 3 && !strcmp(argv[1], "following")) {
       Display_following(atoi(argv[2]));
       return 1;
     }

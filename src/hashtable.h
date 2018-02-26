@@ -19,7 +19,7 @@
 typedef struct HashNode {
   int count;
   int key;
-  char value[12];
+  char value[18];
   struct HashNode *next;
 } HashNode;
 

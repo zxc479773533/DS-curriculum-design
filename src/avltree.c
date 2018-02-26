@@ -115,7 +115,7 @@ AVL_node* rightright_rotate(AVL_node *k1) {
  * return <- k3, the root after rotated
  */
 AVL_node* leftright_rotate(AVL_node *k1) {
-  k1->left_child = rightright_rotate(k1->right_child);
+  k1->left_child = rightright_rotate(k1->left_child);
   return leftleft_rotate(k1);
 }
 
