@@ -15,6 +15,7 @@
 
 /* User database */
 const char database_path[] = "./src/data/users.txt";
+const char hobby__path[] = "./src/data/hobby.txt";
 
 /* Function prototypes */
 
@@ -52,6 +53,7 @@ void Recommend_followers(int user_id);
 void Recommend_followings(int user_id);
 
 /* Others */
+void Add_hobby(int user_id, char *hobby);
 void Change_name(int user_id, char *new_name);
 void Friends_recommend(int user_id);
 
@@ -70,6 +72,7 @@ void print_help(void) {
   printf("    add: Add data\n");
   printf("    add [option] [arg1] [arg2]\n");
   printf("        option=user, add a user, [arg1]=user ID, [arg2]=user name\n");
+  printf("        option=hobby, add a user's hobby, [arg1]=user ID, [arg2]=hobby\n");
   printf("        option=friend, add a friend, [arg1]=user ID, [arg2]=friend ID\n");
   printf("        option=follower, add a follower, [arg1]=user ID, [arg2]=follower ID\n");
   printf("        option=following, add a following, [arg1]=user ID, [arg2]=following ID\n");
@@ -152,8 +155,12 @@ void generate_filename(Set *Set, char *filename) {
  */
 int py_execute(char *func , int argc, char **argv) {
   if (!strcmp(func, "add")) {
-    if (argc == 4 && !strcmp(argv[1], "user")) {
+    if (argc == 3 && !strcmp(argv[1], "user")) {
       Add_user(atoi(argv[2]), argv[3]);
+      return 1;
+    }
+    else if (argc == 4 && !strcmp(argv[1], "hobby")) {
+      Add_hobby(atoi(argv[2]), argv[3]);
       return 1;
     }
     else if (argc == 4 && !strcmp(argv[1], "friend")) {
@@ -281,6 +288,35 @@ void Add_user(int user_id, char *user_name) {
     printf("[ERROR] The user has exists!\n");
   else if (status == ERROR)
     printf("[ERROR] Add user faild! Please check your imput.\n");
+}
+
+/*
+ * Add_like - Add a user's hobby
+ */
+void Add_hobby(int user_id, char *hobby) {
+  /* Check if user exists */
+  if (!check_user(user_id)) {
+    printf("[ERROR] Failed! This user is not exists!\n");
+    return;
+  }
+  int status;
+  HashTable *MyHash = Init_Hash(HASHLEN);
+  Load_Hash(MyHash, hobby__path);
+  /* Find the old hobby */
+  char *old_hobby = Search_Hash(MyHash, user_id);
+  if (old_hobby == NULL) {
+    status = Insert_Hash(MyHash, user_id, hobby);
+    Save_Hash(MyHash, hobby__path);
+    /* Print info */
+    if (status == EXISTS)
+      printf("[ERROR] The user's hobby has existd!\n");
+    else if (status == ERROR)
+      printf("[ERROR] Add hobby faild! Please check your imput.\n");
+  }
+  else {
+    strcpy(old_hobby, hobby);
+    Save_Hash(MyHash, hobby__path);    
+  }
 }
 
 /*
@@ -418,6 +454,9 @@ void Find_user(int user_id) {
   HashTable *MyHash = Init_Hash(HASHLEN);
   Load_Hash(MyHash, database_path);
   char *user_name = Search_Hash(MyHash, user_id);
+  HashTable *HobbyHash = Init_Hash(HASHLEN);
+  Load_Hash(HobbyHash, hobby__path);
+  char *hobby = Search_Hash(HobbyHash, user_id);
   if (user_name == NULL) {
     printf("[ERROR] Failed! This user is not exists!\n");
     return;
@@ -436,6 +475,10 @@ void Find_user(int user_id) {
   printf("Friend: %d\n", friend_set->Elem->num);
   printf("Follower: %d\n", follower_set->Elem->num);
   printf("Following: %d\n", following_set->Elem->num);
+  if (hobby == NULL)
+    printf("Hobby: None\n");
+  else
+    printf("Hobby: %s\n", hobby);
 }
 
 /*
