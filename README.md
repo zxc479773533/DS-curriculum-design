@@ -36,6 +36,8 @@ py_manager [options]
 
 ```
 ./
+ ├── test/  --the test file which runs gtest
+ │
  ├── Makefile
  ├── main.c
  └── src/
