@@ -55,7 +55,6 @@ void Recommend_followings(int user_id);
 /* Others */
 void Add_hobby(int user_id, char *hobby);
 void Change_name(int user_id, char *new_name);
-void Friends_recommend(int user_id);
 
 /*
  * print_help - Print help messages
