@@ -49,7 +49,7 @@ AVL_node* find_min(AVL_node *tree) {
 }
 
 /*
- * find_min -> find the max node in an avl tree
+ * find_max -> find the max node in an avl tree
  * 
  * return <- the ptr to the node
  */

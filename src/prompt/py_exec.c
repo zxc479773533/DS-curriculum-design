@@ -21,6 +21,7 @@ const char hobby__path[] = "./src/data/hobby.txt";
 
 /* Add functions */
 void Add_user(int user_id, char *user_name);
+void Add_hobby(int user_id, char *hobby);
 void Add_friend(int user_id, int friend_id, int tag);
 void Add_follower(int user_id, int follower_id, int tag);
 void Add_following(int user_id, int following_id, int tag);
@@ -53,7 +54,6 @@ void Recommend_followers(int user_id);
 void Recommend_followings(int user_id);
 
 /* Others */
-void Add_hobby(int user_id, char *hobby);
 void Change_name(int user_id, char *new_name);
 
 /*
