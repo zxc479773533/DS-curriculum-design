@@ -496,7 +496,7 @@ void Find_friend(int user_id, int friend_id) {
   if (Set_Member(new_set, friend_id) == OK){
     HashTable *MyHash = Init_Hash(HASHLEN);
     Load_Hash(MyHash, database_path);
-    printf("[INFO] Found it! Your friend %s.\n", Search_Hash(MyHash, user_id));
+    printf("[INFO] Found it! Your friend %s.\n", Search_Hash(MyHash, friend_id));
   }
   else {
     printf("[INFO] Not Found!\n");
@@ -519,7 +519,7 @@ void Find_follower(int user_id, int follower_id) {
   if (Set_Member(new_set, follower_id) == OK){
     HashTable *MyHash = Init_Hash(HASHLEN);
     Load_Hash(MyHash, database_path);
-    printf("[INFO] Found it! Your follower %s.\n", Search_Hash(MyHash, user_id));
+    printf("[INFO] Found it! Your follower %s.\n", Search_Hash(MyHash, follower_id));
   }
   else {
     printf("[INFO] Not Found!\n");
@@ -542,7 +542,7 @@ void Find_following(int user_id, int following_id) {
   if (Set_Member(new_set, following_id) == OK){
     HashTable *MyHash = Init_Hash(HASHLEN);
     Load_Hash(MyHash, database_path);
-    printf("[INFO] Found it! You has followed %s.\n", Search_Hash(MyHash, user_id));
+    printf("[INFO] Found it! You has followed %s.\n", Search_Hash(MyHash, following_id));
   }
   else {
     printf("[INFO] Not Found!\n");
