@@ -189,7 +189,7 @@ int py_execute(char *func , int argc, char **argv) {
       return 1;
     }
     else if (argc == 4 && !strcmp(argv[1], "following")) {
-      Delete_follower(atoi(argv[2]), atoi(argv[3]), 1);
+      Delete_following(atoi(argv[2]), atoi(argv[3]), 1);
       return 1;
     }
   }
