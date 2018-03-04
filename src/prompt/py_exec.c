@@ -154,7 +154,7 @@ void generate_filename(Set *Set, char *filename) {
  */
 int py_execute(char *func , int argc, char **argv) {
   if (!strcmp(func, "add")) {
-    if (argc == 3 && !strcmp(argv[1], "user")) {
+    if (argc == 4 && !strcmp(argv[1], "user")) {
       Add_user(atoi(argv[2]), argv[3]);
       return 1;
     }
